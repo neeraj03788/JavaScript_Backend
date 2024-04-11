@@ -12,7 +12,7 @@ app.use(cors({
 
 app.use(express.json({limit:"64kb"})) //json limit
 app.use(express.urlencoded({extended:true, limit:"64kb"})) //urlencode like %20 +
-app.use(express.static("public"))  //pdf images on own server
+app.use(express.static("public"))  //pdf images on own server and there is a public folder in our folder whose reference is here
 
 
 app.use(cookieParser())

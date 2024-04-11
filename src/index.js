@@ -22,7 +22,7 @@ connectDB()
     })
 })
 .catch((error)=>{
-    console.log("mongo connetion fail!!");
+    console.log("mongo connection fail!!");
 })
 
 
