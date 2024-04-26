@@ -5,16 +5,21 @@ import { uploadOnCloudinary } from '../utils/cloudinary.js'
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 
+
 const generateAccessAndRefreshTokens= async(userId)=>{
     try {
         const user=await User.findById(userId);
+        // console.log("user",user.generateAccessToken());
         const accessToken=user.generateAccessToken();
+        // console.log("ACCESSTOKEN",accessToken);
         const refreshToken=user.generateRefreshToken();
 
+        
         user.refreshToken=refreshToken;
+       
         await user.save({validateBeforeSave: false});
-
-        return {accessToken,refreshToken}
+        
+        return { accessToken, refreshToken }
         
     } catch (error) {
         throw new ApiError(500,"Something went wrong while generating refrresh token and access token")
@@ -121,9 +126,10 @@ const loginUser = asyncHandler(async(req,res)=>{
     if(!isPasswordValid){
         throw new ApiError(401,"Wrong credentials")
     }
-
-    const {accessToken,refreshToken}=await generateAccessAndRefreshTokens(user._id);
     
+    // console.log("user id",user._id)
+    const {accessToken,refreshToken}=await generateAccessAndRefreshTokens(user._id);
+    // console.log("access in user contoller",accessToken)
     const loggedInUser=await User.findById(user._id).select("-password -refreshToken")
 
     const options={
@@ -154,7 +160,7 @@ const logoutUser=asyncHandler(async(req,res)=>{
     User.findByIdAndUpdate(
         req.user._id,
         {
-           $set:{
+           $unset:{
             refreshToken: 1 //this removes the field from document
            }
         },
